@@ -15,7 +15,8 @@ maintainers = [
 requires-python = ">=3"
 dependencies = [
     "matplotlib",
-    "seaborn"
+    "seaborn",
+    "scipy"
 ]
 
 classifiers = [
