@@ -36,8 +36,8 @@ def ensemble(time_list: List[ndarray], array_list: List[ndarray], interp_points:
     upper_bound: ndarray = mean + std
 
     plt.figure()
-    plt.plot(new_time, final_array, color='darkred', label='mean')
-    plt.fill_between(new_time, lower_bound, upper_bound, color='darkorange', alpha=0.5)
+    plt.plot(new_time, mean, color='darkred', label='mean')
+    plt.fill_between(new_time, lower_bound, upper_bound, color='darkorange', alpha=0.5, label='95% CI')
     plt.show()
     if output_dir:
         plt.savefig(os.path.join(output_dir, 'ensemble.png'))
