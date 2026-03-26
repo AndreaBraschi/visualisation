@@ -1,5 +1,4 @@
 import os
-
 from numpy import linspace, zeros, float64
 from scipy.interpolate import CubicSpline
 import matplotlib.pyplot as plt
@@ -9,7 +8,7 @@ from numpy import ndarray
 from typing import List, Optional
 
 def ensemble(time_list: List[ndarray], array_list: List[ndarray], interp_points: int,
-             output_dir: Optional[str]) -> None:
+             plot_title: str, output_path: Optional[str]) -> None:
     """
     :param time_list: list containing the numpy time arrays
     :param array_list: list containing the numpy arrays of different sizes
@@ -18,7 +17,7 @@ def ensemble(time_list: List[ndarray], array_list: List[ndarray], interp_points:
     """
     N: int = len(time_list)
     T: int = array_list[0].shape[-1]
-    final_array: ndarray = zeros((N, T), dtype=float64)
+    final_array: ndarray = zeros((N, interp_points), dtype=float64)
 
     for i, (time_arr, data_arr) in enumerate(zip(time_list, array_list)):
         # compute cubic spline coefficients
@@ -36,10 +35,23 @@ def ensemble(time_list: List[ndarray], array_list: List[ndarray], interp_points:
     upper_bound: ndarray = mean + std
 
     plt.figure()
+    plt.title(plot_title)
     plt.plot(new_time, mean, color='darkred', label='mean')
     plt.fill_between(new_time, lower_bound, upper_bound, color='darkorange', alpha=0.5, label='95% CI')
+    plt.legend()
+    plt.xlabel('Time Normalised (%)')
+    if output_path:
+        plt.savefig(output_path)
     plt.show()
-    if output_dir:
-        plt.savefig(os.path.join(output_dir, 'ensemble.png'))
+    plt.close()
+
+    plt.figure()
+    plt.title(plot_title)
+    plt.plot(new_time, final_array.T, color='darkblue')
+    plt.legend()
+    plt.xlabel('Time Normalised (%)')
+    if output_path:
+        plt.savefig(output_path.replace('.png', '_all.png'))
+    plt.show()
     plt.close()
 
